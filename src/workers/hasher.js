@@ -1,4 +1,4 @@
-import * as wasm from "hash_wasm?a=1"
+import * as wasm from "hash_wasm?a=2"
 
 wasm.set_panic_hook();
 
@@ -25,6 +25,7 @@ function shaSum(file, spark) {
     const chunks = Math.ceil(file.size / chunkSize);
     let currentChunk = 0;
     let fileReader = new FileReader();
+
     // console.log("file size", file.size, "chunks", chunks, "chunkSize", chunkSize);
 
     function loadNext() {
@@ -63,7 +64,14 @@ onmessage = function (e) {
         case "sha1":
             shaSum(file, wasm.Sha1Hasher.new());
             break;
+        case "sha512":
+            shaSum(file, wasm.Sha512Hasher.new());
+            break;
         default:
             console.error("unknow type", type);
     }
 }
+
+postMessage({
+    type: "ready"
+})

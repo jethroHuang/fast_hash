@@ -6,19 +6,6 @@ import { ArchiveOutline as ArchiveIcon, ReorderTwoSharp } from '@vicons/ionicons
 
 let filesInfo = reactive([]);
 
-if (false) {
-  filesInfo.push({
-    id: "1",
-    type: "md5",
-    worker: null,
-    chunkNum: 0,
-    currentChunk: 0,
-    result: '',
-    useTime: 0,
-    name: "zh-cn_windows_11_consumer_editions_version_23h2_x64_dvd_91207780.iso",
-  })
-}
-
 let selectedFiles = [];
 
 function startSum(type, file, id) {

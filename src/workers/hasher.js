@@ -1,7 +1,12 @@
-import * as wasm from "hash_wasm?a=2"
+import * as wasm from "hash-wasm?a=2"
 
 wasm.set_panic_hook();
 
+/**
+ * 发送进度
+ * @param chunkNr 文件分块序号，从1开始
+ * @param chunks 文件分块总数
+ */
 function sendProgress(chunkNr, chunks) {
     postMessage({
         type: "progress",
@@ -12,6 +17,10 @@ function sendProgress(chunkNr, chunks) {
     });
 }
 
+/**
+ * 发送结果
+ * @param result {String} 计算结果
+ */
 function sendResult(result) {
     postMessage({
         type: "result",
@@ -19,36 +28,48 @@ function sendResult(result) {
     });
 }
 
-function shaSum(file, spark) {
+
+/**
+ * 计算文件散列值
+ * @param file {File} 文件
+ * @param hasher {Object} hasher对象
+ */
+function shaSum(file, hasher) {
     // 将文件按50M分割
     const chunkSize = 50 * 1024 * 1024;
+    // 计算文件分块总数
     const chunks = Math.ceil(file.size / chunkSize);
+    // 当前分块序号
     let currentChunk = 0;
+
+    // 对文件进行分块读取
     let fileReader = new FileReader();
 
-    // console.log("file size", file.size, "chunks", chunks, "chunkSize", chunkSize);
-
+    // 加载下一块
     function loadNext() {
         const start = currentChunk * chunkSize;
         const end = start + chunkSize >= file.size ? file.size : start + chunkSize;
         fileReader.readAsArrayBuffer(file.slice(start, end));
     }
 
+    // 读取文件完成
     fileReader.onload = function (e) {
-        spark.update(new Uint8Array(e.target.result)); // 计算MD5
-        sendProgress(currentChunk + 1, chunks);
+        hasher.update(new Uint8Array(e.target.result)); // 计算这一块的散列值
+        sendProgress(currentChunk + 1, chunks); // 发送进度
         currentChunk++;
         if (currentChunk < chunks) {
-            loadNext();
+            loadNext(); // 继续加载下一块
         } else {
-            sendResult(spark.digest());
-            spark.free();
+            sendResult(hasher.digest()); // 发送结果
+            hasher.free(); // 释放内存
         }
     };
 
+    // 加载第一块
     loadNext();
 }
 
+// 接收主线程的消息
 onmessage = function (e) {
     let {
         type = "md5",
@@ -72,6 +93,7 @@ onmessage = function (e) {
     }
 }
 
+// 发送 ready 消息
 postMessage({
     type: "ready"
 })

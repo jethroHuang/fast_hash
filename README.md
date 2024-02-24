@@ -1,29 +1,21 @@
 # fast_hash
 
-This template should help get you started developing with Vue 3 in Vite.
+一个简单的计算文件哈希值的VUE3应用。目前还在开发中。
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+## 安装依赖
 
 ```sh
-pnpm install
+yarn install
 ```
 
-### Compile and Hot-Reload for Development
+### 启动开发服务器
 
 ```sh
-pnpm dev
+yarn dev
 ```
 
-### Compile and Minify for Production
+### 编译
 
 ```sh
-pnpm build
+yarn build
 ```

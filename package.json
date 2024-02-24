@@ -9,8 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "hash_wasm": "file:../hash-wasm/pkg",
-    "pinia": "^2.1.7",
+    "hash_wasm": "file:./wasm",
     "vue": "^3.4.15"
   },
   "devDependencies": {

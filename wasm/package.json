@@ -1,0 +1,19 @@
+{
+  "name": "hash-wasm",
+  "collaborators": [
+    "jethro <jethro_nb@qq.com>"
+  ],
+  "version": "0.1.1",
+  "files": [
+    "hash_wasm_bg.wasm",
+    "hash_wasm.js",
+    "hash_wasm_bg.js",
+    "hash_wasm.d.ts"
+  ],
+  "module": "hash_wasm.js",
+  "types": "hash_wasm.d.ts",
+  "sideEffects": [
+    "./hash_wasm.js",
+    "./snippets/*"
+  ]
+}

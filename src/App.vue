@@ -4,18 +4,20 @@ import HashWorker from '@/workers/hasher.js?worker';
 import { ArchiveOutline as ArchiveIcon, ReorderTwoSharp } from '@vicons/ionicons5'
 //
 
-let filesInfo = reactive([
-    {
-        id: "1",
-        type: "md5",
-        worker: null,
-        chunkNum: 0,
-        currentChunk: 0,
-        result: '',
-        useTime: 0,
-        name: "zh-cn_windows_11_consumer_editions_version_23h2_x64_dvd_91207780.iso",
-    }
-]);
+let filesInfo = reactive([]);
+
+if (false) {
+  filesInfo.push({
+    id: "1",
+    type: "md5",
+    worker: null,
+    chunkNum: 0,
+    currentChunk: 0,
+    result: '',
+    useTime: 0,
+    name: "zh-cn_windows_11_consumer_editions_version_23h2_x64_dvd_91207780.iso",
+  })
+}
 
 let selectedFiles = [];
 
@@ -31,6 +33,7 @@ function startSum(type, file, id) {
         result: '',
         useTime: 0,
         name: file.name,
+        userInput: '',
     })
     filesInfo.push(info);
     let hashType = type;
@@ -63,7 +66,15 @@ function fileChange(info) {
 }
 
 function getPlaceholder(info) {
-    return `正在计算${info.type}...`;
+    if (info.result) {
+        return `计算完成，耗时${info.useTime}ms`;
+    } else {
+      if (info.currentChunk > 0) {
+        return `正在计算${info.type}...(${info.currentChunk}/${info.chunkNum})`;
+      } else {
+        return "正在准备中..."
+      }
+    }
 }
 
 </script>
@@ -73,7 +84,6 @@ function getPlaceholder(info) {
         <n-upload
             multiple
             directory-dnd
-            class="w-1/2"
             @change="fileChange"
         >
             <n-upload-dragger>
@@ -98,17 +108,29 @@ function getPlaceholder(info) {
             <n-button type="primary" @click="mutStart('sha512')">获取sha512</n-button>
         </div>
 
-        <div class="mt-10 w-full">
+        <div class="mt-10 w-full" v-if="filesInfo.length">
             <n-h2 prefix="bar">计算结果</n-h2>
-            <n-card v-for="(file, index) in filesInfo" :title="'['+file.type+']'+file.name">
+            <n-card v-for="(file, index) in filesInfo"
+                    class="mb-4"
+                    size="small"
+                    :title="'['+file.type+']'+file.name"
+            >
+              <template #header-extra v-if="file.useTime">
+                耗时: {{file.useTime}}ms
+              </template>
                 <div class="flex">
-                    <n-input class="flex-auto" disabled :placeholder="getPlaceholder(file)"></n-input>
+                    <n-input
+                        class="flex-auto"
+                        :placeholder="getPlaceholder(file)"
+                        :value="file.result"
+                    >
+                    </n-input>
                     <div class="px-2 center">
-                        <n-icon size="20" color="#00ff00">
+                        <n-icon size="20">
                             <ReorderTwoSharp/>
                         </n-icon>
                     </div>
-                    <n-input class="flex-auto"></n-input>
+                    <n-input class="flex-auto" v-model="file.userInput"></n-input>
                 </div>
             </n-card>
         </div>

@@ -30,7 +30,7 @@ export default defineConfig({
         }),
         Components({
             resolvers: [NaiveUiResolver()]
-        })
+        }),
     ],
     resolve: {
         alias: {

@@ -1,4 +1,4 @@
-import * as wasm from "hash-wasm?a=2"
+import * as wasm from "hash-wasm"
 
 wasm.set_panic_hook();
 

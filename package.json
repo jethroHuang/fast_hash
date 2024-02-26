@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.15",
-    "hash-wasm": "file:./wasm"
+    "hash-wasm": "file:./wasm",
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@vicons/ionicons5": "^0.12.0",
